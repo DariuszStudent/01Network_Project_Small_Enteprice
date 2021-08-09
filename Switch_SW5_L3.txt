@@ -1,0 +1,80 @@
+// ---------------------------------SW_5_L3----------------------------- //
+
+//-------------------------------------------------- podstawowa konfiguracja
+en
+conf t
+hostn SW5
+banner login $ Access for authorized users only. Please enter your username and password. $
+banner motd #Unauthorized access to this device is prohibited!#
+usern admin pr 15 sec cisco
+ip domain-n Local.Test
+cryp key g rsa
+1024
+line con 0
+login local
+exi
+line aux 0
+login local
+exi
+line vty 0 15
+trans inp ssh
+login local
+exi
+
+//--------------------------------------------------- Tworzenie SVI VLAN
+vlan 11
+name COMPUTERS
+exi
+vlan 22
+name SERVERS
+exi
+int vlan 11
+ip add 192.168.1.1 255.255.255.0
+ip helper-address 192.168.2.5
+no sh
+exi
+int vlan 22
+ip address 192.168.2.1 255.255.255.0
+no sh
+ex
+ip routing 
+int g0/1
+no sw
+ip add 192.168.3.2 255.255.255.252
+no sh
+ex
+ip route 0.0.0.0 0.0.0.0 192.168.3.1
+ex
+
+//------------------------------------------------------ OSPF
+router ospf 111
+network 192.168.3.2 0.0.0.3 are 1
+ip route 0.0.0.0 0.0.0.0 192.168.3.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

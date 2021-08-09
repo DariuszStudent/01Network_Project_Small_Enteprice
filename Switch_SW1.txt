@@ -1,0 +1,62 @@
+// ---------------------------------SW_1----------------------------- //
+
+//-------------------------------------------------- podstawowa konfiguracja
+en
+conf t
+hostn SW1
+banner login $ Access for authorized users only. Please enter your username and password. $
+banner motd #Unauthorized access to this device is prohibited!#
+usern admin pr 15 sec cisco
+ip domain-n Local.Test
+cryp key g rsa
+1024
+line con 0
+login local
+exi
+line vty 0 15
+trans inp ssh
+login local
+exi
+
+//----------------------------------------------------- VLAN
+vlan 11
+name COMPUTERS
+exi
+vlan 22
+name SERVERS
+exi
+int vlan 11
+no sh
+ex
+int vlan 22
+no sh
+ex
+int g0/2
+sw mode trun
+sw tru all vlan 11,22
+no sh
+ex
+int g0/1
+sw mode tru
+sw tru all vlan 11,22
+ex
+int range fa0/1 - fa0/24
+sw mode acc
+sw access vlan 11
+ex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

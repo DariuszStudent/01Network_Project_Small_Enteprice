@@ -44,6 +44,12 @@ permit 192.168.2.0 0.0.0.255
 exi
 ip nat inside so list NAT int g0/0/0 overload 
 
+//------------------------------------------------------ OSPF
+router ospf 111
+network 192.168.3.2 0.0.0.3 are 1
+ip route 0.0.0.0 0.0.0.0 46.151.142.254
+
+
 // ------------------------------------------------------Zakończenie i zapis
 exi
 w
