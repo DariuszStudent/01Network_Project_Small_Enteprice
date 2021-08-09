@@ -1,0 +1,49 @@
+// ---------------------------------RTR1----------------------------- //
+
+//-------------------------------------------------- podstawowa konfiguracja
+en
+conf t
+hostn RTR1
+banner login $ Access for authorized users only. Please enter your username and password. $
+banner motd #Unauthorized access to this device is prohibited!#
+usern admin pr 15 sec cisco
+ip domain-n Local.Test
+cryp key g rsa
+1024
+line con 0
+login local
+exi
+line aux 0
+login local
+exi
+line vty 0 15
+trans inp ssh
+login local
+exi
+
+// ---------------------------------------------------No SHut Interfaces
+int g0/0/0
+ip add dhcp
+no sh
+exi
+int g0/0/1
+ip add 192.168.3.1 255.255.255.252
+no sh
+exi
+
+//-------------------------------------------------------Konfiguracja NAT
+int g0/0/0
+ip nat outside
+exi
+int g0/0/1
+ip nat inside
+exi
+ip access-list standart NAT
+permit 192.168.1.0 0.0.0.255
+permit 192.168.2.0 0.0.0.255
+exi
+ip nat inside so list NAT int g0/0/0 overload 
+
+// ------------------------------------------------------Zakończenie i zapis
+exi
+w

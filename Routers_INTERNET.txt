@@ -1,0 +1,42 @@
+// -----------------------------INTERNET--------------------------- //
+en
+conf t
+hostn INTERNET
+banner login $ Access for authorized users only. Please enter your username and password. $
+banner motd #Unauthorized access to this device is prohibited!#
+usern admin pr 15 sec cisco
+ip domain-n Local.Test
+cryp key g rsa
+1024
+line con 0
+login local
+exi
+line aux 0
+login local
+exi
+line vty 0 15
+trans inp ssh
+login local
+exi
+
+// ---------------------------------------------------No SHut Interfaces
+int g0/2
+ip add 46.151.142.254 255.255.255.224
+no sh
+exi
+int G0/0
+ip add 8.8.8.1 255.0.0.0
+no sh
+exi
+
+// ---------------------------------------------------DHCP Router
+ip dhcp excluded-address 46.151.142.254 46.151.142.254
+ip dhcp pool FLATS
+default-router 46.151.142.254
+dns-server 8.8.8.8
+network 46.151.142.224 255.255.255.224
+exi
+
+//------------------------------------------------------Wyjście i zapis z RAM do NVRAM
+exi
+w
